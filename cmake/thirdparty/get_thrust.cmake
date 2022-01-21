@@ -22,6 +22,7 @@ function(find_and_configure_thrust VERSION)
             GIT_TAG        ${VERSION}
             GIT_SHALLOW    TRUE
             OPTIONS        "THRUST_INSTALL OFF"
+	                   "IGNORE_CUB_VERSION_CHECK ON"
     )
     thrust_create_target(cuco::Thrust FROM_OPTIONS)
 endfunction()
