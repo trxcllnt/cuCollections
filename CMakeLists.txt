@@ -16,7 +16,7 @@
 cmake_minimum_required(VERSION 3.18 FATAL_ERROR)
 
 if(NOT EXISTS ${CMAKE_BINARY_DIR}/RAPIDS.cmake)
-  file(DOWNLOAD https://raw.githubusercontent.com/rapidsai/rapids-cmake/branch-22.08/RAPIDS.cmake
+  file(DOWNLOAD https://raw.githubusercontent.com/trxcllnt/rapids-cmake/fea/find-libcudacxx/RAPIDS.cmake
        ${CMAKE_BINARY_DIR}/RAPIDS.cmake)
 endif()
 include(${CMAKE_BINARY_DIR}/RAPIDS.cmake)
