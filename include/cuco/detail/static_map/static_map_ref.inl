@@ -18,9 +18,8 @@
 
 #include <cuco/operator.hpp>
 
-#include <thrust/tuple.h>
-
 #include <cuda/atomic>
+#include <cuda/std/tuple>
 
 #include <cooperative_groups.h>
 
@@ -554,7 +553,7 @@ class operator_impl<
    * insertion is successful or not.
    */
   template <typename Value>
-  __device__ thrust::pair<iterator, bool> insert_and_find(Value const& value) noexcept
+  __device__ cuda::std::pair<iterator, bool> insert_and_find(Value const& value) noexcept
   {
     ref_type& ref_ = static_cast<ref_type&>(*this);
     return ref_.impl_.insert_and_find(value);
@@ -576,7 +575,7 @@ class operator_impl<
    * insertion is successful or not.
    */
   template <typename Value>
-  __device__ thrust::pair<iterator, bool> insert_and_find(
+  __device__ cuda::std::pair<iterator, bool> insert_and_find(
     cooperative_groups::thread_block_tile<cg_size> const& group, Value const& value) noexcept
   {
     ref_type& ref_ = static_cast<ref_type&>(*this);

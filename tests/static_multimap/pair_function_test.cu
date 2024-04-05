@@ -25,9 +25,10 @@
 #include <thrust/iterator/discard_iterator.h>
 #include <thrust/iterator/zip_iterator.h>
 #include <thrust/transform.h>
-#include <thrust/tuple.h>
 
 #include <catch2/catch_template_test_macros.hpp>
+
+#include <cuda/std/tuple>
 
 // Custom pair equal
 template <typename Key, typename Value>
@@ -77,9 +78,9 @@ __inline__ void test_pair_functions(Map& map, PairIt pair_begin, std::size_t num
     auto num = map.pair_count(pair_begin, pair_begin + num_pairs, pair_equal<Key, Value>{});
 
     auto out1_begin = thrust::make_zip_iterator(
-      thrust::make_tuple(thrust::make_discard_iterator(), thrust::make_discard_iterator()));
+      cuda::std::make_tuple(thrust::make_discard_iterator(), thrust::make_discard_iterator()));
     auto out2_begin = thrust::make_zip_iterator(
-      thrust::make_tuple(thrust::make_discard_iterator(), thrust::make_discard_iterator()));
+      cuda::std::make_tuple(thrust::make_discard_iterator(), thrust::make_discard_iterator()));
 
     REQUIRE(num == num_pairs);
 
@@ -95,9 +96,9 @@ __inline__ void test_pair_functions(Map& map, PairIt pair_begin, std::size_t num
     auto num = map.pair_count_outer(pair_begin, pair_begin + num_pairs, pair_equal<Key, Value>{});
 
     auto out1_begin = thrust::make_zip_iterator(
-      thrust::make_tuple(thrust::make_discard_iterator(), thrust::make_discard_iterator()));
+      cuda::std::make_tuple(thrust::make_discard_iterator(), thrust::make_discard_iterator()));
     auto out2_begin = thrust::make_zip_iterator(
-      thrust::make_tuple(thrust::make_discard_iterator(), thrust::make_discard_iterator()));
+      cuda::std::make_tuple(thrust::make_discard_iterator(), thrust::make_discard_iterator()));
 
     REQUIRE(num == (num_pairs + num_pairs / 2));
 

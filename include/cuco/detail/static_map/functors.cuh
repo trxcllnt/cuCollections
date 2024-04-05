@@ -17,7 +17,7 @@
 
 #include <cuco/detail/bitwise_compare.cuh>
 
-#include <thrust/tuple.h>
+#include <cuda/std/tuple>
 
 namespace cuco {
 namespace experimental {
@@ -51,7 +51,7 @@ struct get_slot {
     auto const window_idx      = idx / StorageRef::window_size;
     auto const intra_idx       = idx % StorageRef::window_size;
     auto const [first, second] = storage_[window_idx][intra_idx];
-    return thrust::make_tuple(first, second);
+    return cuda::std::make_tuple(first, second);
   }
 };
 
@@ -89,8 +89,8 @@ struct slot_is_filled {
   template <typename Slot>
   __device__ constexpr bool operator()(Slot const& slot) const noexcept
   {
-    return not(cuco::detail::bitwise_compare(empty_sentinel_, thrust::get<0>(slot)) or
-               cuco::detail::bitwise_compare(erased_sentinel_, thrust::get<0>(slot)));
+    return not(cuco::detail::bitwise_compare(empty_sentinel_, cuda::std::get<0>(slot)) or
+               cuco::detail::bitwise_compare(erased_sentinel_, cuda::std::get<0>(slot)));
   }
 
   /**

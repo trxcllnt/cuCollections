@@ -17,7 +17,8 @@
 #pragma once
 
 #include <thrust/device_reference.h>
-#include <thrust/tuple.h>
+
+#include <cuda/std/tuple>
 
 #include <type_traits>
 
