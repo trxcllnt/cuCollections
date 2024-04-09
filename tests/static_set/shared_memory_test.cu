@@ -23,11 +23,11 @@
 #include <thrust/functional.h>
 #include <thrust/iterator/zip_iterator.h>
 #include <thrust/sequence.h>
-#include <thrust/tuple.h>
 
 #include <catch2/catch_template_test_macros.hpp>
 
 #include <cuda/functional>
+#include <cuda/std/tuple>
 
 #include <limits>
 
@@ -119,12 +119,12 @@ TEMPLATE_TEST_CASE_SIG("Shared memory static set", "", ((typename Key), Key), (i
 
     REQUIRE(d_keys_exist.size() == d_keys_correct.size());
     auto zip =
-      thrust::make_zip_iterator(thrust::make_tuple(d_keys_exist.begin(), d_keys_correct.begin()));
+      thrust::make_zip_iterator(cuda::std::make_tuple(d_keys_exist.begin(), d_keys_correct.begin()));
 
     REQUIRE(cuco::test::all_of(zip,
                                zip + d_keys_exist.size(),
                                cuda::proclaim_return_type<bool>([] __device__(auto const& z) {
-                                 return thrust::get<0>(z) and thrust::get<1>(z);
+                                 return cuda::std::get<0>(z) and cuda::std::get<1>(z);
                                })));
   }
 

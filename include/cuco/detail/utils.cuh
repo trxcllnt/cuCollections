@@ -17,10 +17,9 @@
 
 #include <cuco/detail/bitwise_compare.cuh>
 
-#include <thrust/tuple.h>
-
 #include <cuda/std/bit>
 #include <cuda/std/cmath>
+#include <cuda/std/tuple>
 #include <cuda/std/type_traits>
 
 namespace cuco {
@@ -36,7 +35,7 @@ __device__ __forceinline__ int32_t count_least_significant_bits(uint32_t x, int3
 }
 
 /**
- * @brief Converts pair to `thrust::tuple` to allow assigning to a zip iterator.
+ * @brief Converts pair to `cuda::std::tuple` to allow assigning to a zip iterator.
  *
  * @tparam Key The slot key type
  * @tparam Value The slot value type
@@ -44,17 +43,17 @@ __device__ __forceinline__ int32_t count_least_significant_bits(uint32_t x, int3
 template <typename Key, typename Value>
 struct slot_to_tuple {
   /**
-   * @brief Converts a pair to a `thrust::tuple`.
+   * @brief Converts a pair to a `cuda::std::tuple`.
    *
    * @tparam S The slot type
    *
    * @param s The slot to convert
-   * @return A thrust::tuple containing `s.first` and `s.second`
+   * @return A cuda::std::tuple containing `s.first` and `s.second`
    */
   template <typename S>
-  __device__ thrust::tuple<Key, Value> operator()(S const& s)
+  __device__ cuda::std::tuple<Key, Value> operator()(S const& s)
   {
-    return thrust::tuple<Key, Value>(s.first, s.second);
+    return cuda::std::tuple<Key, Value>(s.first, s.second);
   }
 };
 
@@ -78,7 +77,7 @@ struct slot_is_filled {
   template <typename S>
   __device__ bool operator()(S const& s)
   {
-    return not cuco::detail::bitwise_compare(thrust::get<0>(s), empty_key_sentinel_);
+    return not cuco::detail::bitwise_compare(cuda::std::get<0>(s), empty_key_sentinel_);
   }
 };
 

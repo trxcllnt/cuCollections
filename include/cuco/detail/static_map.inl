@@ -21,7 +21,8 @@
 
 #include <thrust/iterator/transform_iterator.h>
 #include <thrust/iterator/zip_iterator.h>
-#include <thrust/tuple.h>
+
+#include <cuda/std/tuple>
 
 #include <cub/device/device_select.cuh>
 
@@ -219,7 +220,7 @@ std::pair<KeyOut, ValueOut> static_map<Key, Value, Scope, Allocator>::retrieve_a
   auto begin =
     thrust::make_transform_iterator(slots_begin, cuco::detail::slot_to_tuple<Key, Value>{});
   auto filled           = cuco::detail::slot_is_filled<Key>{get_empty_key_sentinel()};
-  auto zipped_out_begin = thrust::make_zip_iterator(thrust::make_tuple(keys_out, values_out));
+  auto zipped_out_begin = thrust::make_zip_iterator(cuda::std::make_tuple(keys_out, values_out));
 
   std::size_t temp_storage_bytes = 0;
   using temp_allocator_type =
@@ -432,7 +433,7 @@ __device__ bool static_map<Key, Value, Scope, Allocator>::device_mutable_view::i
 template <typename Key, typename Value, cuda::thread_scope Scope, typename Allocator>
 template <typename Hash, typename KeyEqual>
 __device__
-  thrust::pair<typename static_map<Key, Value, Scope, Allocator>::device_mutable_view::iterator,
+  cuda::std::pair<typename static_map<Key, Value, Scope, Allocator>::device_mutable_view::iterator,
                bool>
   static_map<Key, Value, Scope, Allocator>::device_mutable_view::insert_and_find(
     value_type const& insert_pair, Hash hash, KeyEqual key_equal) noexcept
@@ -467,7 +468,7 @@ __device__
         }
       }
 
-      return thrust::make_pair(current_slot, false);
+      return cuda::std::make_pair(current_slot, false);
     }
 
     if (slot_is_available) {
@@ -494,7 +495,7 @@ __device__
       if (status == insert_result::SUCCESS) {
         // This thread did the insertion, so the iterator is guaranteed to be
         // valid without any special care.
-        return thrust::make_pair(current_slot, true);
+        return cuda::std::make_pair(current_slot, true);
       }
       // duplicate present during insert
       if (status == insert_result::DUPLICATE) {
@@ -509,7 +510,7 @@ __device__
           }
         }
 
-        return thrust::make_pair(current_slot, false);
+        return cuda::std::make_pair(current_slot, false);
       }
     }
 

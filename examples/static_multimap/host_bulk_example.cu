@@ -18,9 +18,10 @@
 
 #include <thrust/device_vector.h>
 #include <thrust/iterator/counting_iterator.h>
-#include <thrust/pair.h>
 #include <thrust/sequence.h>
 #include <thrust/transform.h>
+
+#include <cuda/std/tuple>
 
 #include <limits>
 
@@ -40,14 +41,14 @@ int main(void)
   cuco::static_multimap<key_type, value_type> map{
     N * 2, cuco::empty_key{empty_key_sentinel}, cuco::empty_value{empty_value_sentinel}};
 
-  thrust::device_vector<thrust::pair<key_type, value_type>> pairs(N);
+  thrust::device_vector<cuda::std::pair<key_type, value_type>> pairs(N);
 
   // Create a sequence of pairs. Eeach key has two matches.
   // E.g., {{0,0}, {1,1}, ... {0,25'000}, {1, 25'001}, ...}
   thrust::transform(thrust::make_counting_iterator<int>(0),
                     thrust::make_counting_iterator<int>(pairs.size()),
                     pairs.begin(),
-                    [] __device__(auto i) { return thrust::make_pair(i % (N / 2), i); });
+                    [] __device__(auto i) { return cuda::std::make_pair(i % (N / 2), i); });
 
   // Inserts all pairs into the map
   map.insert(pairs.begin(), pairs.end());

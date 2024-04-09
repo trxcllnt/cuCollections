@@ -25,7 +25,8 @@
 #include <thrust/iterator/zip_iterator.h>
 #include <thrust/sort.h>
 #include <thrust/transform.h>
-#include <thrust/tuple.h>
+
+#include <cuda/std/tuple>
 
 #include <catch2/catch_template_test_macros.hpp>
 
@@ -85,7 +86,7 @@ __inline__ void test_custom_key_value_type(Map& map, std::size_t num_pairs)
                     });
 
   auto pair_begin =
-    thrust::make_zip_iterator(thrust::make_tuple(insert_keys.begin(), insert_values.begin()));
+    thrust::make_zip_iterator(cuda::std::make_tuple(insert_keys.begin(), insert_values.begin()));
   auto key_begin = insert_keys.begin();
 
   SECTION("All inserted keys-value pairs should be correctly recovered during find")

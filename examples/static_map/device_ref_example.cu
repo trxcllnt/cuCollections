@@ -21,7 +21,8 @@
 #include <thrust/iterator/zip_iterator.h>
 #include <thrust/logical.h>
 #include <thrust/sequence.h>
-#include <thrust/tuple.h>
+
+#include <cuda/std/tuple>
 
 #include <cmath>
 #include <cstddef>
@@ -174,11 +175,11 @@ int main(void)
   map.retrieve_all(contained_keys.begin(), contained_values.begin());
 
   auto tuple_iter =
-    thrust::make_zip_iterator(thrust::make_tuple(contained_keys.begin(), contained_values.begin()));
+    thrust::make_zip_iterator(cuda::std::make_tuple(contained_keys.begin(), contained_values.begin()));
   // Iterate over all slot contents and verify that `slot.key + 1 == slot.value` is always true.
   auto result = thrust::all_of(
     thrust::device, tuple_iter, tuple_iter + num_inserted[0], [] __device__(auto const& tuple) {
-      return thrust::get<0>(tuple) + 1 == thrust::get<1>(tuple);
+      return cuda::std::get<0>(tuple) + 1 == cuda::std::get<1>(tuple);
     });
 
   if (result) { std::cout << "Success! Target values are properly incremented.\n"; }

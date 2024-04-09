@@ -49,7 +49,7 @@ struct get_slot {
     auto const intra_idx  = idx % StorageRef::window_size;
     if constexpr (HasPayload) {
       auto const& [first, second] = storage_[window_idx][intra_idx];
-      return thrust::make_tuple(first, second);
+      return cuda::std::make_tuple(first, second);
     } else {
       return storage_[window_idx][intra_idx];
     }
@@ -93,8 +93,8 @@ struct slot_is_filled {
     auto const key = [&]() {
       if constexpr (HasPayload) {
         // required by thrust zip iterator in `retrieve_all`
-        if constexpr (cuco::detail::is_thrust_pair_like<S>::value) {
-          return thrust::get<0>(slot);
+        if constexpr (cuco::detail::is_cuda_std_pair_like<S>::value) {
+          return cuda::std::get<0>(slot);
         } else {
           return slot.first;
         }

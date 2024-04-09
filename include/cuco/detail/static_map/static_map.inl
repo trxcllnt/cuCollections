@@ -397,7 +397,7 @@ std::pair<KeyOut, ValueOut>
 static_map<Key, T, Extent, Scope, KeyEqual, ProbingScheme, Allocator, Storage>::retrieve_all(
   KeyOut keys_out, ValueOut values_out, cuda_stream_ref stream) const
 {
-  auto const zipped_out_begin = thrust::make_zip_iterator(thrust::make_tuple(keys_out, values_out));
+  auto const zipped_out_begin = thrust::make_zip_iterator(cuda::std::make_tuple(keys_out, values_out));
   auto const zipped_out_end   = impl_->retrieve_all(zipped_out_begin, stream);
   auto const num              = std::distance(zipped_out_begin, zipped_out_end);
 

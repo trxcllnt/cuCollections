@@ -799,11 +799,11 @@ namespace legacy {
  * static_map<int, int> m{100'000, empty_key_sentinel, empty_value_sentinel, erased_value_sentinel};
  *
  * // Create a sequence of pairs {{0,0}, {1,1}, ... {i,i}}
- * thrust::device_vector<thrust::pair<int,int>> pairs(50,000);
+ * thrust::device_vector<cuda::std::pair<int,int>> pairs(50,000);
  * thrust::transform(thrust::make_counting_iterator(0),
  *                   thrust::make_counting_iterator(pairs.size()),
  *                   pairs.begin(),
- *                   []__device__(auto i){ return thrust::make_pair(i,i); };
+ *                   []__device__(auto i){ return cuda::std::make_pair(i,i); };
  *
  *
  * // Inserts all pairs into the map
@@ -1444,7 +1444,7 @@ class static_map {
    *                  thrust::make_counting_iterator(50'000),
    *                  [map = m.get_device_mutable_view()]
    *                  __device__ (auto i) mutable {
-   *                     map.insert(thrust::make_pair(i,i));
+   *                     map.insert(cuda::std::make_pair(i,i));
    *                  });
    * \endcode
    */
@@ -1664,7 +1664,7 @@ class static_map {
      */
     template <typename Hash     = cuco::default_hash_function<key_type>,
               typename KeyEqual = thrust::equal_to<key_type>>
-    __device__ thrust::pair<iterator, bool> insert_and_find(
+    __device__ cuda::std::pair<iterator, bool> insert_and_find(
       value_type const& insert_pair, Hash hash = Hash{}, KeyEqual key_equal = KeyEqual{}) noexcept;
 
     /**

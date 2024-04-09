@@ -20,10 +20,9 @@
 #include <cuco/detail/utils.cuh>
 
 #include <thrust/device_reference.h>
-#include <thrust/tuple.h>
 
 #include <cuda/std/tuple>
-#include <tuple>
+
 #include <type_traits>
 
 namespace cuco {
@@ -31,7 +30,7 @@ namespace cuco {
 /**
  * @brief Custom pair type
  *
- * @note This is necessary because `thrust::pair` is under aligned.
+ * @note This is necessary because `cuda::std::pair` is under aligned.
  *
  * @tparam First Type of the first value in the pair
  * @tparam Second Type of the second value in the pair
@@ -103,20 +102,6 @@ struct alignas(detail::pair_alignment<First, Second>()) pair {
   __host__ __device__ constexpr pair(T const& p)
     : pair{cuda::std::get<0>(thrust::raw_reference_cast(p)),
            cuda::std::get<1>(thrust::raw_reference_cast(p))}
-  {
-  }
-
-  /**
-   * @brief Constructs a pair from the given thrust::pair-like `p`.
-   *
-   * @tparam T Type of the pair to copy from
-   *
-   * @param p The input pair to copy from
-   */
-  template <typename T, std::enable_if_t<detail::is_thrust_pair_like<T>::value>* = nullptr>
-  __host__ __device__ constexpr pair(T const& p)
-    : pair{thrust::get<0>(thrust::raw_reference_cast(p)),
-           thrust::get<1>(thrust::raw_reference_cast(p))}
   {
   }
 

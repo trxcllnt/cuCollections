@@ -63,7 +63,7 @@ int main(void)
   thrust::device_vector<Value> insert_values(num_keys);
   thrust::sequence(insert_values.begin(), insert_values.end(), 0);
   auto zipped =
-    thrust::make_zip_iterator(thrust::make_tuple(insert_keys.begin(), insert_values.begin()));
+    thrust::make_zip_iterator(cuda::std::make_tuple(insert_keys.begin(), insert_values.begin()));
 
   // Inserts all pairs into the map
   map.insert(zipped, zipped + insert_keys.size());

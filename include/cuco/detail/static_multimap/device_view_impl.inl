@@ -18,8 +18,9 @@
 #include <cuco/detail/static_multimap/kernels.cuh>
 #include <cuco/detail/utils.cuh>
 
-#include <thrust/tuple.h>
 #include <thrust/type_traits/is_contiguous_iterator.h>
+
+#include <cuda/std/tuple>
 
 #include <cooperative_groups.h>
 #include <cooperative_groups/memcpy_async.h>
@@ -568,10 +569,10 @@ class static_multimap<Key, Value, Scope, Allocator, ProbeSequence>::device_view_
     for (auto index = lane_id; index < num_outputs; index += g.size()) {
       auto& probe_pair                                           = probe_output_buffer[index];
       auto& contained_pair                                       = contained_output_buffer[index];
-      thrust::get<0>(*(probe_output_begin + offset + index))     = probe_pair.first;
-      thrust::get<1>(*(probe_output_begin + offset + index))     = probe_pair.second;
-      thrust::get<0>(*(contained_output_begin + offset + index)) = contained_pair.first;
-      thrust::get<1>(*(contained_output_begin + offset + index)) = contained_pair.second;
+      cuda::std::get<0>(*(probe_output_begin + offset + index))     = probe_pair.first;
+      cuda::std::get<1>(*(probe_output_begin + offset + index))     = probe_pair.second;
+      cuda::std::get<0>(*(contained_output_begin + offset + index)) = contained_pair.first;
+      cuda::std::get<1>(*(contained_output_begin + offset + index)) = contained_pair.second;
     }
   }
 
